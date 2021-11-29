@@ -1,24 +1,26 @@
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
 
 
 public class QuizGame {
 
-    JPanel panel;
-    JButton createProblem, checkAnswer;
-    JLabel showProblem;
-    JTextField answerInput;
-    JRadioButton add, sub, x, div;
-    ButtonGroup reeee = new ButtonGroup();
+   static JPanel panel;
+    static JButton createProblem, checkAnswer;
+    static JLabel showProblem;
+    static JTextField answerInput;
+    static JRadioButton add, sub, x, div;
+    static JLabel ya;
+    static ButtonGroup reeee = new ButtonGroup();
+
 
     static double userAnswer, correctAnswer;
     static String displayProblem = "";
 
     public static void main(String[] args) {
         new QuizGame();
-        //createProblem();
-       // getUser();
-       // check();
+
     }
     public QuizGame(){
         JFrame frame = new JFrame("Quiz Game");
@@ -36,11 +38,24 @@ public class QuizGame {
         showProblem = new JLabel("PLACE HOLDER");
         answerInput = new JTextField(10);
         checkAnswer = new JButton("Check anser");
+        ya = new JLabel(displayProblem);
 
         add.setBounds(100, 50, 200, 25 );
         sub.setBounds(100, 75, 200, 25);
         x.setBounds(100, 100, 200, 25);
         div.setBounds(100, 125, 200, 25);
+
+        createProblem.setBounds(50, 250, 200, 25);
+        showProblem.setBounds(50, 150, 200, 25);
+        answerInput.setBounds(50, 175, 200, 25);
+        checkAnswer.setBounds(50, 200, 200, 25);
+        ya.setBounds(50, 225,200, 25);
+
+
+        add.setSelected(true);
+
+        createProblem.addActionListener(new createProblemButton());
+        checkAnswer.addActionListener(new checkAnswerButton());
 
         reeee.add(add);
         reeee.add(sub);
@@ -52,17 +67,28 @@ public class QuizGame {
         panel.add(sub);
         panel.add(x);
         panel.add(div);
+        panel.add(createProblem);
+        panel.add(showProblem);
+        panel.add(answerInput);
+        panel.add(checkAnswer);
+        panel.add(ya);
+
+
 
         frame.add(panel);
         frame.setVisible(true);
     }
     public static void check(){
         if (userAnswer == correctAnswer) {
-            JOptionPane.showMessageDialog(null, "nice");
+            ya.setText("Yep");
+            panel.add(createProblem);
+        }else{
+            ya.setText("No rip bozo");
         }
     }
+    
     public static void getUser(){
-        userAnswer = input(displayProblem);
+        userAnswer = Double.parseDouble(answerInput .getText());
     }
 
 
@@ -132,6 +158,35 @@ public class QuizGame {
 
         correctAnswer = Math.round(correctAnswer * 100) / 100;
         displayProblem = num1 + " / " + num2;
+    }
+
+    private class createProblemButton implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent actionEvent){
+            if (add.isSelected()){
+                add();
+            }
+            if (sub.isSelected()){
+                sub();
+            }
+            if (x.isSelected()){
+                mult();
+            }
+            if (div.isSelected()){
+                div();
+            }
+            showProblem.setText(displayProblem);
+            panel.remove(createProblem);
+            panel.updateUI();
+        }
+
+    }
+    private class checkAnswerButton implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent actionEvent){
+            getUser();
+            check();
+        }
     }
 
 
